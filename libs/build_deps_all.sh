@@ -74,7 +74,6 @@ cd ../..
 
 git clone --recurse-submodules -b v1.59.1 --depth 1 --shallow-submodules https://github.com/grpc/grpc
 
-cd grpc
 mkdir -p grpc/cmake/build
 
 cd grpc/cmake/build
