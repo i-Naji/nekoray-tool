@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(nekoray VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -137,7 +138,10 @@ endif ()
 set(PROJECT_SOURCES
         ${PLATFORM_SOURCES}
 
-        main/main.cpp
+        tools/client.cpp
+        tools/parser.cpp
+
+        # main/main.cpp
         main/NekoGui.cpp
         main/NekoGui_Utils.cpp
         main/QJS.cpp
@@ -258,28 +262,28 @@ set(PROJECT_SOURCES
 )
 
 # Qt exe
-if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(nekoray
-            MANUAL_FINALIZATION
-            ${PROJECT_SOURCES}
-    )
-    # Define target properties for Android with Qt 6 as:
-    #    set_property(TARGET nekoray APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-    #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-    # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else ()
-    if (ANDROID)
+# if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+#     qt_add_executable(nekoray
+#             MANUAL_FINALIZATION
+#             ${PROJECT_SOURCES}
+#     )
+#     # Define target properties for Android with Qt 6 as:
+#     #    set_property(TARGET nekoray APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#     #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
+#     # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+# else ()
+#     if (ANDROID)
         add_library(nekoray SHARED
                 ${PROJECT_SOURCES}
         )
-        # Define properties for Android with Qt 5 after find_package() calls as:
-        #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else ()
-        add_executable(nekoray
-                ${PROJECT_SOURCES}
-        )
-    endif ()
-endif ()
+#         # Define properties for Android with Qt 5 after find_package() calls as:
+#         #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+#     else ()
+#         add_executable(nekoray
+#                 ${PROJECT_SOURCES}
+#         )
+#     endif ()
+# endif ()
 
 # Target
 
@@ -289,37 +293,37 @@ set_property(TARGET nekoray PROPERTY AUTORCC ON)
 
 # Target Source macOS
 
-set(MACOSX_ICON ${CMAKE_SOURCE_DIR}/res/nekoray.icns)
-if (APPLE)
-    target_sources(nekoray PRIVATE ${MACOSX_ICON})
-endif ()
-set_target_properties(nekoray PROPERTIES
-        MACOSX_BUNDLE_ICON_FILE "nekoray.icns"
-        RESOURCE ${MACOSX_ICON}
-        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/res/MacOSXBundleInfo.plist
-        MACOSX_BUNDLE_GUI_IDENTIFIER moe.nekoray.macosx
-        MACOSX_BUNDLE TRUE
-        WIN32_EXECUTABLE TRUE
-)
+# set(MACOSX_ICON ${CMAKE_SOURCE_DIR}/res/nekoray.icns)
+# if (APPLE)
+#     target_sources(nekoray PRIVATE ${MACOSX_ICON})
+# endif ()
+# set_target_properties(nekoray PROPERTIES
+#         MACOSX_BUNDLE_ICON_FILE "nekoray.icns"
+#         RESOURCE ${MACOSX_ICON}
+#         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/res/MacOSXBundleInfo.plist
+#         MACOSX_BUNDLE_GUI_IDENTIFIER moe.nekoray.macosx
+#         MACOSX_BUNDLE TRUE
+#         WIN32_EXECUTABLE TRUE
+# )
 
 # Target Source Translations
 
-set(TS_FILES
-        translations/zh_CN.ts
-        translations/fa_IR.ts
-        translations/ru_RU.ts
-)
-set(LUPDATE_OPTIONS
-        -locations none -no-obsolete
-)
-if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_lupdate(nekoray TS_FILES ${TS_FILES} OPTIONS ${LUPDATE_OPTIONS})
-    qt_add_lrelease(nekoray TS_FILES ${TS_FILES} QM_FILES_OUTPUT_VARIABLE QM_FILES)
-else ()
-    qt5_create_translation(QM_FILES ${PROJECT_SOURCES} ${TS_FILES} OPTIONS ${LUPDATE_OPTIONS})
-endif ()
-configure_file(translations/translations.qrc ${CMAKE_BINARY_DIR} COPYONLY)
-target_sources(nekoray PRIVATE ${CMAKE_BINARY_DIR}/translations.qrc)
+# set(TS_FILES
+#         translations/zh_CN.ts
+#         translations/fa_IR.ts
+#         translations/ru_RU.ts
+# )
+# set(LUPDATE_OPTIONS
+#         -locations none -no-obsolete
+# )
+# if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+#     qt_add_lupdate(nekoray TS_FILES ${TS_FILES} OPTIONS ${LUPDATE_OPTIONS})
+#     qt_add_lrelease(nekoray TS_FILES ${TS_FILES} QM_FILES_OUTPUT_VARIABLE QM_FILES)
+# else ()
+#     qt5_create_translation(QM_FILES ${PROJECT_SOURCES} ${TS_FILES} OPTIONS ${LUPDATE_OPTIONS})
+# endif ()
+# configure_file(translations/translations.qrc ${CMAKE_BINARY_DIR} COPYONLY)
+# target_sources(nekoray PRIVATE ${CMAKE_BINARY_DIR}/translations.qrc)
 
 # Target Link
 
@@ -330,6 +334,6 @@ target_link_libraries(nekoray PRIVATE
         ${PLATFORM_LIBRARIES}
 )
 
-if (QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(nekoray)
-endif ()
+# if (QT_VERSION_MAJOR EQUAL 6)
+#     qt_finalize_executable(nekoray)
+# endif ()

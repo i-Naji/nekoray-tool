@@ -432,7 +432,7 @@ namespace NekoGui {
 
     QString FindCoreAsset(const QString &name) {
         QStringList search{NekoGui::dataStore->v2ray_asset_dir};
-        search << QApplication::applicationDirPath();
+        search << "./";
         search << "/usr/share/sing-geoip";
         search << "/usr/share/sing-geosite";
         search << "/usr/share/xray";
