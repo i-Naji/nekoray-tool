@@ -72,5 +72,21 @@ ninja && ninja install
 
 cd ../..
 
+git clone --recurse-submodules -b v1.59.1 --depth 1 --shallow-submodules https://github.com/grpc/grpc
+
+cd grpc
+mkdir -p grpc/cmake/build
+
+cd grpc/cmake/build
+
+cmake -DgRPC_INSTALL=ON \
+  -DgRPC_BUILD_TESTS=OFF \
+  ../..
+make -j 4
+make install
+
+
+cd ../../..
+
 ####
 clean
