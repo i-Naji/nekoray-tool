@@ -72,6 +72,10 @@ ninja && ninja install
 
 cd ../..
 
+export MY_INSTALL_DIR=$HOME/.local
+mkdir -p $MY_INSTALL_DIR
+export PATH="$MY_INSTALL_DIR/bin:$PATH"
+
 git clone --recurse-submodules -b v1.59.1 --depth 1 --shallow-submodules https://github.com/grpc/grpc
 
 mkdir -p grpc/cmake/build
@@ -80,6 +84,7 @@ cd grpc/cmake/build
 
 cmake -DgRPC_INSTALL=ON \
   -DgRPC_BUILD_TESTS=OFF \
+  -DCMAKE_INSTALL_PREFIX=$MY_INSTALL_DIR \
   ../..
 make -j 4
 make install
