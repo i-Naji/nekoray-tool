@@ -24,7 +24,7 @@ mkdir -p $INSTALL_PREFIX
 
 #### clean ####
 clean() {
-  rm -rf dl.zip yaml-* zxing-* protobuf
+  rm -rf dl.zip yaml-* zxing-* protobuf grpc
 }
 
 #### ZXing v2.0.0 ####
@@ -72,9 +72,6 @@ ninja && ninja install
 
 cd ../..
 
-export MY_INSTALL_DIR=$HOME/.local
-mkdir -p $MY_INSTALL_DIR
-export PATH="$MY_INSTALL_DIR/bin:$PATH"
 
 git clone --recurse-submodules -b v1.59.1 --depth 1 --shallow-submodules https://github.com/grpc/grpc
 
@@ -84,11 +81,10 @@ cd grpc/cmake/build
 
 cmake -DgRPC_INSTALL=ON \
   -DgRPC_BUILD_TESTS=OFF \
-  -DCMAKE_INSTALL_PREFIX=$MY_INSTALL_DIR \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
   ../..
-make -j 4
-make install
-
+make -j 4 && make install
 
 cd ../../..
 
